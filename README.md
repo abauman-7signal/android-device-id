@@ -1,4 +1,4 @@
-# android-device-id1. 
+# android-device-id
 
 Functional requirements:
 -----------------------
