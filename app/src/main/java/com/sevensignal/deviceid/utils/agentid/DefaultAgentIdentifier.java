@@ -5,6 +5,6 @@ import com.sevensignal.deviceid.exceptions.AgentIdentifierStoreException;
 public class DefaultAgentIdentifier implements AgentIdentifier {
 	@Override
 	public String getId() throws AgentIdentifierStoreException {
-		return null;
+		return "an id";
 	}
 }
