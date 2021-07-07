@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -84,6 +86,25 @@ public class DefaultAgentIdentifierTest {
 		assertNotEmpty(subject.getId());
 
 		when(agentIdFileStoreMock.read()).thenReturn(null);
+		assertNotEmpty(subject.getId());
+	}
+
+	@Test(expected = AgentIdentifierStoreException.class)
+	public void whenCannotStoreToSharedPrefsAfterReadingFromFileShouldThrowAgentIdentificationStoreException() throws AgentIdentifierStoreException {
+		when(agentIdFileStoreMock.read()).thenReturn(UUID_FROM_FILE);
+		doThrow(new AgentIdentifierStoreException(UUID_FROM_FILE)).when(agentIdSharedPrefStoreMock).write(UUID_FROM_FILE);
+		subject.getId();
+	}
+
+	@Test(expected = AgentIdentifierStoreException.class)
+	public void whenCannotStoreToSharedPrefsAfterCreatingNewShouldThrowAgentIdentificationStoreException() throws AgentIdentifierStoreException {
+		doThrow(new AgentIdentifierStoreException("do not know what the UUID will be")).when(agentIdSharedPrefStoreMock).write(anyString());
+		subject.getId();
+	}
+
+	@Test
+	public void whenCannotStoreToFileAfterCreatingNewShouldNotThrowAgentIdentificationStoreException() throws AgentIdentifierStoreException {
+		doThrow(new AgentIdentifierStoreException("do not know what the UUID will be")).when(agentIdFileStoreMock).write(anyString());
 		assertNotEmpty(subject.getId());
 	}
 }
