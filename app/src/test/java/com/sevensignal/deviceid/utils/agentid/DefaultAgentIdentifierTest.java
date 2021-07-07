@@ -4,12 +4,22 @@ import com.sevensignal.deviceid.exceptions.AgentIdentifierStoreException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class DefaultAgentIdentifierTest {
 
 	private AgentIdentifier subject;
+
+	@Mock
+	private AgentIdentifierStore agentIdSharedPrefStoreMock;
+
+	@Mock
+	private AgentIdentifierStore agentIdFileStoreMock;
+
 
 	@Before
 	public void setup() {
@@ -37,4 +47,11 @@ public class DefaultAgentIdentifierTest {
 		assertNotEquals("getting UUIDs back to back should not return same value", uuid1, uuid2);
 	}
 
+	@Test
+	public void shouldPersistUuid() throws AgentIdentifierStoreException {
+		String actualUuid = subject.getId();
+		assertNotEmpty(actualUuid);
+		verify((agentIdSharedPrefStoreMock, times(1)).write(actualUuid);
+		verify(agentIdFileStoreMock, times(1)).write(actualUuid);
+	}
 }
