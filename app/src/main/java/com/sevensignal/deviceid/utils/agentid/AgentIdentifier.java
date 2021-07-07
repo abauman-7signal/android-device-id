@@ -1,4 +1,4 @@
-package com.sevensignal.deviceid.utils;
+package com.sevensignal.deviceid.utils.agentid;
 
 import com.sevensignal.deviceid.exceptions.AgentIdentifierStoreException;
 
