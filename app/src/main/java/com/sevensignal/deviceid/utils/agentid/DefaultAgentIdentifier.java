@@ -31,7 +31,11 @@ public class DefaultAgentIdentifier implements AgentIdentifier {
 		}
 		agentId = UUID.randomUUID().toString().trim();
 		agentIdSharedPrefStore.write(agentId);
-		agentIdFileStore.write(agentId);
+		try {
+			agentIdFileStore.write(agentId);
+		} catch (AgentIdentifierStoreException ex) {
+//			Log.w(EYE_CONFIG, "Ignoring inability to save Agent ID to file: '" + agentId + "'");
+		}
 		return agentId;
 	}
 }
