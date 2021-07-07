@@ -14,9 +14,17 @@ public class DefaultAgentIdentifier implements AgentIdentifier {
 		this.agentIdFileStore = agentIdentifierFileStore;
 	}
 
+	private boolean isNotEmpty(final String id) {
+		return (id != null && !id.isEmpty());
+	}
+
 	@Override
 	public String getId() throws AgentIdentifierStoreException {
-		String agentId = UUID.randomUUID().toString().trim();
+		String agentId = agentIdSharedPrefStore.read();
+		if (isNotEmpty(agentId)) {
+			return agentId;
+		}
+		agentId = UUID.randomUUID().toString().trim();
 		agentIdSharedPrefStore.write(agentId);
 		agentIdFileStore.write(agentId);
 		return agentId;
