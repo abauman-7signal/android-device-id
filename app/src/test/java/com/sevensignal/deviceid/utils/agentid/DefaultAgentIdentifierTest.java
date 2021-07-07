@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 public class DefaultAgentIdentifierTest {
 
 	private static final String UUID_FROM_SHARED_PREF = "uuid-from-shared-pref";
+	private static final String UUID_FROM_FILE = "uuid-from-file";
 
 	private AgentIdentifier subject;
 
@@ -69,6 +70,20 @@ public class DefaultAgentIdentifierTest {
 		assertNotEmpty(subject.getId());
 
 		when(agentIdSharedPrefStoreMock.read()).thenReturn(null);
+		assertNotEmpty(subject.getId());
+	}
+
+	@Test
+	public void shouldNextTryToUseIdFromFileStoreAndUpdateSharedPrefStore() throws AgentIdentifierStoreException {
+		when(agentIdSharedPrefStoreMock.read()).thenReturn(null);
+		when(agentIdFileStoreMock.read()).thenReturn(UUID_FROM_FILE);
+		assertEquals(UUID_FROM_FILE, subject.getId());
+		verify(agentIdSharedPrefStoreMock, times(1)).write(UUID_FROM_FILE);
+
+		when(agentIdFileStoreMock.read()).thenReturn("");
+		assertNotEmpty(subject.getId());
+
+		when(agentIdFileStoreMock.read()).thenReturn(null);
 		assertNotEmpty(subject.getId());
 	}
 }
