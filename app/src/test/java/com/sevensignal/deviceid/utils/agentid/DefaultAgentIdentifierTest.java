@@ -5,6 +5,7 @@ import com.sevensignal.deviceid.exceptions.AgentIdentifierStoreException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.times;
@@ -23,7 +24,8 @@ public class DefaultAgentIdentifierTest {
 
 	@Before
 	public void setup() {
-		subject = new DefaultAgentIdentifier();
+		MockitoAnnotations.initMocks(this);
+		subject = new DefaultAgentIdentifier(agentIdSharedPrefStoreMock, agentIdFileStoreMock);
 	}
 
 	private void assertNotEmpty(String uuid1) {
@@ -51,7 +53,7 @@ public class DefaultAgentIdentifierTest {
 	public void shouldPersistUuid() throws AgentIdentifierStoreException {
 		String actualUuid = subject.getId();
 		assertNotEmpty(actualUuid);
-		verify((agentIdSharedPrefStoreMock, times(1)).write(actualUuid);
+		verify(agentIdSharedPrefStoreMock, times(1)).write(actualUuid);
 		verify(agentIdFileStoreMock, times(1)).write(actualUuid);
 	}
 }
