@@ -1,8 +1,10 @@
 # android-device-id1. 
 
 Functional requirements:
+-----------------------
 
-1. Create a random UUID if one has not already been created (checks persistence storage for existing one. See below for those persistence stores)
+1. Create a random UUID if one has not already been created (checks persistence storage for existing 
+   one. See below for those persistence stores)
 
 2. Save the newly created UUID to
     
@@ -19,6 +21,13 @@ Functional requirements:
 
 3. Edge cases
     
-    a. Inability to save the agent ID to shared preferences should cause the app to stop or at least not take measurements and indicate to the user why
+    a. Inability to save the agent ID to shared preferences should cause the app to stop or at least 
+       not take measurements and indicate to the user why
     
-    b. Inability to save the agent ID to a public file will not cause the app to stop but does cause that condition to be logged
+    b. Inability to save the agent ID to a public file will not cause the app to stop but does cause 
+       that condition to be logged
+
+Notes:
+-----
+* This version does not implement the persistent stores
+* The commit history demonstrates red then green light test driven development (TDD)
