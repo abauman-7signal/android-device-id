@@ -1,5 +1,7 @@
 package com.sevensignal.deviceid.utils.agentid;
 
+import android.util.Log;
+
 import com.sevensignal.deviceid.exceptions.AgentIdentifierStoreException;
 
 import java.util.UUID;
@@ -22,6 +24,9 @@ public class DefaultAgentIdentifier implements AgentIdentifier {
 	public String getId() throws AgentIdentifierStoreException {
 		String agentId = agentIdSharedPrefStore.read();
 		if (isNotEmpty(agentId)) {
+			return agentId;
+		} else if (isNotEmpty(agentId = agentIdFileStore.read())) {
+			agentIdSharedPrefStore.write(agentId);
 			return agentId;
 		}
 		agentId = UUID.randomUUID().toString().trim();
