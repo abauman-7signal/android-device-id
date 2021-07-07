@@ -10,8 +10,11 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DefaultAgentIdentifierTest {
+
+	private static final String UUID_FROM_SHARED_PREF = "uuid-from-shared-pref";
 
 	private AgentIdentifier subject;
 
@@ -55,5 +58,17 @@ public class DefaultAgentIdentifierTest {
 		assertNotEmpty(actualUuid);
 		verify(agentIdSharedPrefStoreMock, times(1)).write(actualUuid);
 		verify(agentIdFileStoreMock, times(1)).write(actualUuid);
+	}
+
+	@Test
+	public void shouldFirstTryToUseIdFromSharedPrefStore() throws AgentIdentifierStoreException {
+		when(agentIdSharedPrefStoreMock.read()).thenReturn(UUID_FROM_SHARED_PREF);
+		assertEquals(UUID_FROM_SHARED_PREF, subject.getId());
+
+		when(agentIdSharedPrefStoreMock.read()).thenReturn("");
+		assertNotEmpty(subject.getId());
+
+		when(agentIdSharedPrefStoreMock.read()).thenReturn(null);
+		assertNotEmpty(subject.getId());
 	}
 }
